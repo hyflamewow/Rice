@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { AppSettingsService } from 'src/app/services/app-settings.service';
 
 @Component({
   selector: 'app-values',
@@ -18,8 +19,10 @@ export class ValuesComponent implements OnInit {
   //#endregion 首要物件
   //#region 屬性
   //#region 初始
-  constructor(private http: HttpClient) {
-    this.apiUrlRoot = 'api/';
+  constructor(
+    appsettingsService: AppSettingsService,
+    private http: HttpClient) {
+    this.apiUrlRoot = appsettingsService.AppSettings.ApiUrlRoot;
   }
   ngOnInit() {
     this.listAll();
