@@ -50,7 +50,8 @@ Rice$ git commit -m "first commit"
 ```json
 {
   "scripts": {
-    "start": "ng serve --proxy-config proxy.conf.json -o",
+    "start": "ng serve -o",
+    "startC": "ng serve --proxy-config proxy.conf.json -o",
     "build": "ng build --prod",
   },
 ```
@@ -74,7 +75,7 @@ using Microsoft.AspNetCore.Http;
 ....
 public void ConfigureServices(IServiceCollection services)
 {
-    services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1)
+    services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2)
         .AddJsonOptions(options =>
         {
             options.SerializerSettings.ContractResolver = new Newtonsoft.Json.Serialization.DefaultContractResolver();
@@ -94,7 +95,6 @@ public void Configure(IApplicationBuilder app, IHostingEnvironment env)
     }
 
     // app.UseHttpsRedirection();
-    app.UseMvc();
     app.UseDefaultFiles();
     app.UseStaticFiles();
     app.Run(async (context) =>
@@ -142,10 +142,13 @@ Moon$ npm run build
 Sun$ dotnet restore
 Sun$ dotnet run
 ```
-Ctrl+C 結束程式
+
 ### 瀏覽
 http://localhost:5000/  
 https://localhost:5001/
+
+### 結束程式
+Ctrl+C
 
 ## 完成品測試
 建置專案
