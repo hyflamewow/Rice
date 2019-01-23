@@ -55,9 +55,25 @@ Rice$ git commit -m "first commit"
     "build": "ng build --prod",
   },
 ```
-修改src/index.html，為了站台不一定在Root下的問題。
+修改src/index.html，為了使用Electron, href要使用"./",
+一般網站也可以使用"./", 但如果你的URL不是在Root下,
+這裡要輸入你站台的目錄, 一但使用了"./", angular如果使用"./",
+它有一個Children Route將不能使用, 指的是直接打URL不能用,
+但透過從根目錄路由過去還是可以的, 所以網站使用"/"或指定站台目錄,
+就可以直接打URL了  
+把```<base href="/">```移除, 
 ```html
-<base href="./">
+<head>
+  <meta charset="utf-8">
+  <title>Moon</title>
+  <script>
+   if (/^http/.test(document.location)) {
+      document.write('<base href="/">');
+    } else {
+      document.write('<base href="./">');
+    }
+  </script>
+  ...
 ```
 修改 Moon/.gitignore  
 找到VSCode
@@ -95,6 +111,7 @@ public void Configure(IApplicationBuilder app, IHostingEnvironment env)
     }
 
     // app.UseHttpsRedirection();
+	app.UseMvc();
     app.UseDefaultFiles();
     app.UseStaticFiles();
     app.Run(async (context) =>
@@ -104,7 +121,6 @@ public void Configure(IApplicationBuilder app, IHostingEnvironment env)
             await context.Response.SendFileAsync(Path.Combine(env.WebRootPath, "index.html"));
         }
     });
-    app.UseMvc();
 }
 ```
 修改 Sun/.gitignore

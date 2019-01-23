@@ -48,6 +48,7 @@ namespace Sun
             }
 
             // app.UseHttpsRedirection();
+            app.UseMvc();
             app.UseDefaultFiles();
             app.UseStaticFiles();
             app.Run(async (context) =>
@@ -57,7 +58,6 @@ namespace Sun
                     await context.Response.SendFileAsync(Path.Combine(env.WebRootPath, "index.html"));
                 }
             });
-            app.UseMvc();
         }
     }
 }
