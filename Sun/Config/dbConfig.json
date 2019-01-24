@@ -1,0 +1,10 @@
+{
+    "CreateDB": {
+        "Driver": "MSSQL",
+        "ConnStr": "Server=(localdb)\\mssqllocaldb;Database=master;Trusted_Connection=True;MultipleActiveResultSets=true"
+    },
+    "MainDB": {
+        "Driver": "MSSQL",
+        "ConnStr": "Server=(localdb)\\mssqllocaldb;Database=MSSQLLocalDB;Trusted_Connection=True;MultipleActiveResultSets=true"
+    }
+}

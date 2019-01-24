@@ -13,6 +13,9 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Newtonsoft.Json;
+using NLog.Config;
+using Sun.DB;
 
 namespace Sun
 {
@@ -49,6 +52,12 @@ namespace Sun
             {
                 options.Filters.Add(new CorsAuthorizationFilterFactory("CorsPolicy"));
             });
+            ConfigFiles configFiles = Configuration.GetSection("ConfigFiles").Get<ConfigFiles>();
+            // #目前不考慮整合ASP.NET的Log機制, 因為看不出優點, 單純用NLog就夠了。
+            NLog.LogManager.Configuration = new XmlLoggingConfiguration(configFiles.NLogConfig);
+            var dbConfig = JsonConvert.DeserializeObject<Dictionary<string, DBHelperConfig>>(File.ReadAllText(configFiles.DBConfig));
+            // #將DBHelper放入DI
+            services.AddSingleton<DBHelper>(new DBHelper(dbConfig));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
