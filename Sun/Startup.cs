@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Cors.Internal;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -30,8 +31,24 @@ namespace Sun
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2)
                 .AddJsonOptions(options =>
                 {
+                    // #維持屬性名稱大小寫
                     options.SerializerSettings.ContractResolver = new Newtonsoft.Json.Serialization.DefaultContractResolver();
                 });
+
+            services.AddCors(options =>
+                {
+                    options.AddPolicy("CorsPolicy",
+                        builder => builder
+                            .AllowAnyOrigin()
+                            .AllowAnyMethod()
+                            .AllowAnyHeader()
+                            .AllowCredentials()
+                    );
+                });
+            services.Configure<MvcOptions>(options =>
+            {
+                options.Filters.Add(new CorsAuthorizationFilterFactory("CorsPolicy"));
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -49,15 +66,16 @@ namespace Sun
 
             // app.UseHttpsRedirection();
             app.UseMvc();
-            app.UseDefaultFiles();
-            app.UseStaticFiles();
-            app.Run(async (context) =>
-            {
-                if (!Path.HasExtension(context.Request.Path.Value))
-                {
-                    await context.Response.SendFileAsync(Path.Combine(env.WebRootPath, "index.html"));
-                }
-            });
+            app.UseCors("CorsPolicy");
+            // app.UseDefaultFiles();
+            // app.UseStaticFiles();
+            // app.Run(async (context) =>
+            // {
+            //     if (!Path.HasExtension(context.Request.Path.Value))
+            //     {
+            //         await context.Response.SendFileAsync(Path.Combine(env.WebRootPath, "index.html"));
+            //     }
+            // });
         }
     }
 }
